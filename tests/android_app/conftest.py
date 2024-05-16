@@ -2,6 +2,10 @@ import pytest
 from appium.options.android import UiAutomator2Options
 from selene import browser
 import os
+from utils import attach
+from dotenv import load_dotenv
+
+load_dotenv()
 
 @pytest.fixture(scope='function', autouse=True)
 def mobile_management():
@@ -21,8 +25,8 @@ def mobile_management():
             "sessionName": "BStack first_test",
 
             # Set your access credentials
-            "userName": "uladzimirbely_fzbPla",
-            "accessKey": "nQy5yvjwnjDQAqdYMeHL"
+            "userName": os.getenv('USER_NAME'),
+            "accessKey": os.getenv('ACCESS_KEY')
         }
     })
 
@@ -32,5 +36,8 @@ def mobile_management():
     browser.config.timeout = float(os.getenv('timeout', '10.0'))
 
     yield
+
+    attach.add_screenshot(browser)
+    attach.add_video(browser)
 
     browser.quit()
